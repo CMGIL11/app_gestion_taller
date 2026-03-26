@@ -1,4 +1,4 @@
-# Gestión de Taller - Django
+# Gestión de Taller - Django - Arquitectura software
 
 ## Descripción
 
