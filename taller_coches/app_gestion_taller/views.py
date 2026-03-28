@@ -3,16 +3,29 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import json
 from .models import Cliente, Coche, Servicio, CocheServicio
+from django.shortcuts import render
 
 def lista_clientes(request):
-    clientes = list(Cliente.objects.values("id", "nombre", "telefono", "email"))
-    return JsonResponse(clientes, safe=False)
+    #clientes = list(Cliente.objects.values("id", "nombre", "telefono", "email"))
+    #return JsonResponse(clientes, safe=False)
+    clientes = Cliente.objects.all()
+    return render(request, 'app_gestion_taller/lista_clientes.html', {'clientes':clientes})
 
 def detalle_cliente(request, cliente_id):
-    try:
-        cliente = Cliente.objects.values("id", "nombre", "telefono","email").get(id=cliente_id)
-        return JsonResponse(cliente)
+    #try:
+    #   cliente = Cliente.objects.values("id", "nombre", "telefono","email").get(id=cliente_id)
+    #   return JsonResponse(cliente)
 
+    #except Cliente.DoesNotExist:
+    #    return JsonResponse({"error": "Cliente no encontrado"}, status=404)
+    try:
+        cliente = Cliente.objects.get(id=cliente_id)
+        coches = Coche.objects.filter(cliente=cliente)
+        contexto = {
+        'cliente': cliente,
+        'coches': coches,
+        }
+        return render(request, 'app_gestion_taller/detalle_cliente.html', contexto)
     except Cliente.DoesNotExist:
         return JsonResponse({"error": "Cliente no encontrado"}, status=404)
 
@@ -119,31 +132,6 @@ def buscar_coches_de_cliente(request, cliente_id):
             return JsonResponse({"error": "Cliente no encontrado"}, status=404)
     return JsonResponse({"error": "Método no permitido"}, status=405)
 
-#Buscar servicio por coche
-@csrf_exempt
-def buscar_servicios_de_coche(request, coche_id):
-    if request.method == 'GET':
-        try:
-            coche = Coche.objects.get(id=coche_id)
-            servicios = list(
-                CocheServicio.objects.filter(coche=coche)
-                .select_related('servicio')
-                .values("servicio__id", "servicio__nombre", "servicio__descripcion")
-            )
-            respuesta = {
-                    "coche": {
-                        "id": coche.id,
-                        "marca": coche.marca,
-                        "modelo": coche.modelo,
-                        "matricula": coche.matricula,
-                    },
-                    "servicios": servicios,
-            }
-            return JsonResponse(respuesta)
-        except Coche.DoesNotExist:
-            return JsonResponse({"error": "Coche no encontrado"}, status=404)
-    return JsonResponse({"error": "Método no permitido"}, status=405)
-
 #Nuevos endpoints (pruebas Celia)
 #Actualizar cliente
 @csrf_exempt
@@ -194,4 +182,43 @@ def buscar_cliente_por_email(request):
         except KeyError:
             return JsonResponse({"error": "Datos incompletos"}, status=400)
     return JsonResponse({"error": "Método no permitido"}, status=405)
+
+#Buscar servicio por coche
+@csrf_exempt
+def buscar_servicios_de_coche(request, coche_id):
+    """
+    if request.method == 'GET':
+        try:
+            coche = Coche.objects.get(id=coche_id)
+            servicios = list(
+                CocheServicio.objects.filter(coche=coche)
+                .select_related('servicio')
+                .values("servicio__id", "servicio__nombre", "servicio__descripcion")
+            )
+            respuesta = {
+                    "coche": {
+                        "id": coche.id,
+                        "marca": coche.marca,
+                        "modelo": coche.modelo,
+                        "matricula": coche.matricula,
+                    },
+                    "servicios": servicios,
+            }
+            return JsonResponse(respuesta)
+        except Coche.DoesNotExist:
+            return JsonResponse({"error": "Coche no encontrado"}, status=404)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
+"""
+#Nuevo
+    try:
+        coche = Coche.objects.get(id=coche_id)
+        coche_servicios = CocheServicio.objects.filter(coche=coche).select_related('servicio')
+        contexto = {
+                'coche': coche,
+                'coche_servicios': coche_servicios,
+        }
+        return render(request, 'app_gestion_taller/servicios_coche.html', contexto)
+    except Coche.DoesNotExist:
+        return JsonResponse({"error": "Coche no encontrado"}, status=404)
+
 
