@@ -1,39 +1,106 @@
-# Gestión de Taller - Django - Arquitectura software
+# Gestión de Taller - Django - Arquitectura del Software
 
 ## Descripción
+Este proyecto consiste en el desarrollo incremental de una aplicación web en Django para la gestión de un taller de coches.
 
-Este proyecto consiste en el desarrollo de una aplicación web con Django para la gestión básica de un taller de coches. Permite registrar clientes, los vehículos asociados a cada cliente y los servicios realizados a esos vehículos. Además, incluye una base de datos relacional, gestión desde el panel de administración de Django y vistas en formato JSON para consultar la información almacenada.
+La aplicación permite registrar clientes, los coches asociados a cada cliente y los servicios realizados a esos vehículos. A lo largo de distintas prácticas se han ido incorporando nuevas funcionalidades, incluyendo configuración inicial del proyecto, enrutamiento, modelado de base de datos, vistas JSON, plantillas HTML y formularios basados en modelos.
 
-## ¿En qué consiste el proyecto?
+## Objetivo del proyecto
+El objetivo principal es construir una aplicación web funcional en Django aplicando progresivamente conceptos fundamentales de desarrollo backend, persistencia de datos, renderizado de vistas y organización del proyecto con control de versiones en GitHub.
 
-La aplicación está pensada para organizar la información principal de un taller de coches de forma sencilla. El sistema almacena los datos de los clientes, los coches que pertenecen a cada uno y los servicios que recibe cada vehículo. Para ello, se ha diseñado una estructura de base de datos con relaciones entre las distintas entidades, permitiendo representar de forma clara la información del taller.
+## Funcionalidades implementadas
 
-También se ha incluido la configuración básica de la aplicación en Django, la creación de migraciones, el registro de modelos en el panel de administración y varias rutas para consultar datos en formato JSON.
+### Práctica 1 — Configuración inicial del proyecto
+- Creación del entorno virtual
+- Instalación de Django
+- Creación del proyecto Django
+- Creación de la aplicación `app_gestion_taller`
+- Configuración inicial de rutas y vistas
+- Integración con Git y GitHub
 
-## Funcionalidades
+### Práctica 2 — URLs con parámetros y validaciones
+- Uso de parámetros dinámicos en URLs
+- Captura de datos mediante parámetros en las rutas
+- Validación de datos recibidos
+- Restricción de vistas por método HTTP
 
-- Registro de clientes
-- Registro de coches asociados a cada cliente
-- Registro de servicios realizados
-- Relación entre coches y servicios
-- Panel de administración con Django Admin
-- Consultas de clientes en formato JSON
+### Práctica 3 — Modelado de la base de datos
+- Creación de los modelos:
+  - `Cliente`
+  - `Coche`
+  - `Servicio`
+  - `CocheServicio`
+- Relaciones entre tablas:
+  - Un cliente puede tener varios coches
+  - Un coche puede tener varios servicios
+- Migraciones de base de datos
+- Registro de modelos en Django Admin
+
+### Práctica 4 — Endpoints para registrar y consultar datos
+- Registro de clientes mediante `POST`
+- Registro de coches mediante `POST`
+- Registro de servicios mediante `POST`
+- Búsqueda de cliente por ID
+- Búsqueda de coche por matrícula
+- Búsqueda de coches de un cliente
+- Búsqueda de servicios asociados a un coche
+- Actualización de cliente
+- Búsqueda de coches por marca
+- Búsqueda de cliente por email
+
+### Práctica 5 — Plantillas HTML
+- Sustitución de respuestas JSON por vistas renderizadas en HTML
+- Plantillas implementadas:
+  - Lista de clientes
+  - Detalle de cliente
+  - Servicios de un coche
+- Uso de:
+  - `render`
+  - bucles `{% for %}`
+  - condicionales `{% if %}`
+
+### Práctica 6 — Formularios basados en modelos
+- Creación de `forms.py`
+- Formularios basados en `ModelForm`
+- Formularios para:
+  - Cliente
+  - Coche
+  - Servicio
+  - CocheServicio
+- Creación de vistas para insertar datos desde formularios web
+- Plantilla reutilizable `formulario.html`
+- Redirección tras guardar datos
 
 ## Modelos principales
 
-- **Cliente**: guarda nombre, teléfono y email
-- **Coche**: guarda marca, modelo y matrícula, y se relaciona con un cliente
-- **Servicio**: guarda el nombre y la descripción del servicio
-- **CocheServicio**: tabla intermedia para relacionar coches y servicios junto con la fecha
+### Cliente
+Guarda la información de cada cliente:
+- nombre
+- teléfono
+- email
+
+### Coche
+Guarda la información de cada vehículo:
+- marca
+- modelo
+- matrícula
+- cliente asociado
+
+### Servicio
+Guarda la información de cada servicio del taller:
+- nombre
+- descripción
+
+### CocheServicio
+Tabla intermedia que relaciona coches y servicios, incluyendo:
+- coche
+- servicio
+- fecha
 
 ## Tecnologías utilizadas
-
 - Python
 - Django
 - SQLite3
-
-## Rutas principales
-
-- `/admin/`
-- `/gestion/clientes/`
-- `/gestion/clientes/<id>/`
+- HTML
+- Git
+- GitHub
