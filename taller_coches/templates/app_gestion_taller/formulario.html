@@ -1,0 +1,9 @@
+<!-- Plantilla reutilizable formulario.html-->
+ {% block content %}
+  <h2>{{ titulo }}</h2> <!-- El titulo se coloca aqui, se accede como atiributo-->
+  <form method="post"> <!-- Creo un formulario de HTML-->
+    {% csrf_token %} <!-- Le pido a Django que me genere el token-->
+    {{ form.as_p }} <!-- Le digo que aqui escriba el formulario, porque lo he cargado como un formulario-->
+    <button type="submit">Guardar</button>
+  </form>
+{% endblock %}

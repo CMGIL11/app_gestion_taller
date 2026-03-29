@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import lista_clientes, detalle_cliente, registrar_cliente, registrar_coche, registrar_servicio, buscar_cliente, buscar_coche_por_matricula, buscar_coches_de_cliente, buscar_servicios_de_coche, actualizar_cliente, buscar_coche_por_marca, buscar_cliente_por_email
+from .views import lista_clientes, detalle_cliente, registrar_cliente, registrar_coche, registrar_servicio, buscar_cliente, buscar_coche_por_matricula, buscar_coches_de_cliente, buscar_servicios_de_coche, actualizar_cliente, buscar_coche_por_marca, buscar_cliente_por_email, nuevo_cliente, nuevo_coche, nuevo_servicio, nuevo_coche_servicio
 
 urlpatterns = [
     path('clientes/', lista_clientes, name='lista_clientes'),
@@ -17,4 +17,9 @@ urlpatterns = [
     path('clientes/actualizar/', actualizar_cliente,name='actualizar_cliente'),
     path('coches/marca/', buscar_coche_por_marca, name='buscar_coche_por_marca'),
     path('clientes/email/', buscar_cliente_por_email, name='buscar_cliente_por_email'),
+
+    path('clientes/nuevo/', nuevo_cliente, name='nuevo_cliente'),  #URL para el formulario
+    path('coches/nuevo/', nuevo_coche, name='nuevo_coche'),
+    path('servicios/nuevo/', nuevo_servicio, name='nuevo_servicio'),
+    path('coches-servicios/nuevo/', nuevo_coche_servicio, name='nuevo_coche_servicio'),
 ]
