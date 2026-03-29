@@ -3,7 +3,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import json
 from .models import Cliente, Coche, Servicio, CocheServicio
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .forms import ClienteForm, CocheForm, ServicioForm, CocheServicioForm
 
 def lista_clientes(request):
     #clientes = list(Cliente.objects.values("id", "nombre", "telefono", "email"))
@@ -30,7 +31,7 @@ def detalle_cliente(request, cliente_id):
         return JsonResponse({"error": "Cliente no encontrado"}, status=404)
 
 #Registrar cliente
-@csrf_exempt
+@csrf_exempt #Token que Django te obliga a utilizarlo MainToMain
 def registrar_cliente(request): 
     if request.method == 'POST': #Accedemos mediante un POST
         try:
@@ -220,5 +221,51 @@ def buscar_servicios_de_coche(request, coche_id):
         return render(request, 'app_gestion_taller/servicios_coche.html', contexto)
     except Coche.DoesNotExist:
         return JsonResponse({"error": "Coche no encontrado"}, status=404)
+
+#Vista para crear instancias desde formularios
+#CLIENTE. Vista para crear clientes desde formularios
+def nuevo_cliente(request):
+    if request.method == 'POST':
+        form = ClienteForm(request.POST) #Cargo los datos que me los da rellenos del formulario
+        if form.is_valid(): #Compruebo que son validos. Si esto falla se va al return de abajo y te rederiza la plantilla con el formulario una siguiente vez.
+            form.save() #Hace todo el trabajo de la BBDD
+            return redirect('lista_clientes') #Te mando a la vista de clientes
+    else:
+        form = ClienteForm() #Cargo la informacion del formulario desde el cliente y te la renderizo
+    return render(request, 'app_gestion_taller/formulario.html', {'form': form, 'titulo': 'Nuevo Cliente'})
+
+#COCHE. Vista para crear coches desde formularios
+def nuevo_coche(request):
+    if request.method == 'POST':
+        form = CocheForm(request.POST) 
+        if form.is_valid():
+            form.save() 
+            return redirect('lista_clientes') 
+    else:
+        form = CocheForm() 
+    return render(request, 'app_gestion_taller/formulario.html', {'form': form, 'titulo': 'Nuevo Coche'})
+
+#SERVICIOS. Vista para crear servicios desde formularios
+def nuevo_servicio(request):
+    if request.method == 'POST':
+        form = ServicioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_clientes')
+    else:
+        form = ServicioForm()
+    return render(request, 'app_gestion_taller/formulario.html', {'form': form, 'titulo': 'Nuevo Servicio'})
+
+#COCHE-SERVICIO. Vista para crear relaciones coche-servicio desde formularios
+def nuevo_coche_servicio(request):
+    if request.method == 'POST':
+        form = CocheServicioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_clientes')
+    else:
+        form = CocheServicioForm()
+    return render(request, 'app_gestion_taller/formulario.html', {'form': form, 'titulo': 'Nuevo CocheServicio'})
+
 
 
